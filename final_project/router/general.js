@@ -35,7 +35,24 @@ public_users.get('/',function (req, res) {
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  //Write your code here
+ const sendDataWithPromise = () => new Promise((resolve, reject) => {
+    try {
+        const isbn = req.params.isbn;
+        const book = books[isbn];
+
+        if (book){
+            resolve({ message: 'success', data: book });
+        }
+    } catch (error) {
+        reject(error);
+    }
+  })
+
+  sendDataWithPromise().then(result => {
+    if (result.message === 'success'){
+        return res.status(200).json({ message: 'found', book: result.data })
+    }
+  }).catch(err => res.status(500).json({ message: 'internal server error' }))
   return res.status(300).json({message: "Yet to be implemented"});
  });
   

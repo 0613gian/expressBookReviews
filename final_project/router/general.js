@@ -12,8 +12,25 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  npm install
-  return res.status(300).json({message: "Yet to be implemented"});
+  const sendDataWithPromise = () => new Promise((resolve, reject) => {
+        try {
+            const result = { message: 'success', data: books };
+            resolve(result);
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+    sendDataWithPromise().then(result => {
+        if (result.message === 'success'){
+            return res.status(200).json({ message: 'success', books: result.data });
+        }
+        else {
+            return res.status(403).json({ message: 'books not found' })
+        }
+    }).catch(err => res.status(500).json({ message: 'internal server error' }));
+});
+
 });
 
 // Get book details based on ISBN
